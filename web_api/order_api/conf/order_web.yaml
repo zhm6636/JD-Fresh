@@ -1,0 +1,5 @@
+nacos:
+  addr: 42.192.108.133
+  port: 8848
+  namespaceId: 1228ff8b-cb6e-4d9e-a333-661d2b710691
+  dataId: order_web

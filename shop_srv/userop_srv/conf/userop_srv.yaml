@@ -1,0 +1,5 @@
+nacos:
+  addr: 42.192.108.133
+  port: 8848
+  namespaceId: 155fe77c-d33b-4b0d-90bf-b04ae0458a90
+  dataId: userop_srv

@@ -1,0 +1,23 @@
+mysql: 
+ addr: "42.192.108.133"
+ port: 3306
+ username: root
+ password: Zhm5833366..
+ database: test
+
+redis:
+ addr: "42.192.108.133"
+ port: 6379
+ database: "0"
+ 
+logFilePath: "tmp/logs/log.log"
+cousulAddress: 127.0.0.1
+cousulPort: 8500
+
+userServer:
+ name: user_srv
+ address: 10.2.178.13
+ port: 50051
+ tags: ["grpc","proto"]
+
+language: zh

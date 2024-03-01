@@ -1,0 +1,15 @@
+logFilePath: "tmp/logs/log.log"
+cousulAddress: 127.0.0.1
+cousulPort: 8500
+
+userServer:
+ name: user_srv
+ tags: ["grpc","proto"]
+
+userClient:
+ address: 10.2.178.13
+ name: user_web
+ port: 50001
+ tags: ["web","gin","api"]
+
+language: zh

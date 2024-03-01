@@ -1,0 +1,264 @@
+syntax = "proto3";
+
+option go_package = ".;goods";
+//用户服务
+service Goods{
+  //商品相关接口
+
+  //商品列表
+  rpc GoodsList(GoodsFilterRequest) returns(GoodsListResponse);
+  //批量获取商品信息
+  //现在用户提交订单有多个商品，你得批量查询商品的信息吧
+  rpc BatchGetGoods(BatchGoodsIdInfo) returns(GoodsListResponse);
+  //创建商品
+  rpc CreateGoods(CreateGoodsInfo) returns (GoodsInfoResponse);
+  //删除商品
+  rpc DeleteGoods(DeleteGoodsInfo) returns (Empty);
+  //修改商品
+  rpc UpdateGoods(CreateGoodsInfo) returns (Empty);
+  //商品详情
+  rpc GetGoodsDetail(GoodInfoRequest) returns(GoodsInfoResponse);
+
+
+
+  //商品分类
+
+  //获取所有的分类
+  rpc GetAllCategoryList(Empty) returns(CategoryListResponse);
+  //新建分类信息
+  rpc CreateCategory(CategoryInfoRequest) returns(CategoryInfoResponse);
+  //删除分类
+  rpc DeleteCategory(DeleteCategoryRequest) returns(Empty);
+  //修改分类信息
+  rpc UpdateCategory(CategoryInfoRequest) returns(Empty);
+
+
+  //品牌
+
+  //品牌列表信息
+  rpc BrandList(BrandFilterRequest) returns(BrandListResponse);
+  //新建品牌信息
+  rpc CreateBrand(BrandRequest) returns(BrandInfoResponse);
+  //删除品牌
+  rpc DeleteBrand(BrandRequest) returns(Empty);
+  //修改品牌信息
+  rpc UpdateBrand(BrandRequest) returns(Empty);
+
+
+  //轮播图
+
+  //获取轮播列表信息
+  rpc BannerList(Empty) returns(BannerListResponse);
+  //添加banner图
+  rpc CreateBanner(BannerRequest) returns(BannerResponse);
+  //删除轮播图
+  rpc DeleteBanner(BannerRequest) returns(Empty);
+  //修改轮播图
+  rpc UpdateBanner(BannerRequest) returns(Empty);
+
+
+  //品牌分类
+
+  //获取品牌分类列表
+  rpc CategoryBrandList(CategoryBrandFilterRequest) returns(CategoryBrandListResponse);
+  //通过category获取brands
+  rpc GetCategoryBrandList(CategoryInfoRequest) returns(BrandListResponse);
+  //通过brands获取categories
+
+  //添加分类品牌
+  rpc CreateCategoryBrand(CategoryBrandRequest) returns(CategoryBrandResponse);
+  //删除轮播图
+  rpc DeleteCategoryBrand(CategoryBrandRequest) returns(Empty);
+  //修改轮播图
+  rpc UpdateCategoryBrand(CategoryBrandRequest) returns(Empty);
+}
+
+//商品列表请求消息体
+message GoodsFilterRequest  {
+  int32 priceMin = 1;//最小价格
+  int32 priceMax = 2; //最大价格
+  int32 isHot = 3; //是否是热门
+  int32  isNew = 4; //是否是新品
+  int32  isTab = 5; //是否是分类选项
+  int32 topCategory = 6; //是否是顶级分类
+  int32 pages = 7; //页码
+  int32 pagePerNums = 8; //每页现实条数
+  string keyWords = 9; //关键字
+  int32 brand = 10;//品牌
+}
+
+//商品列表的返回消息题
+message GoodsListResponse {
+  int32 total = 1; //总条数
+  repeated GoodsInfoResponse data = 2; //每个商品信息
+}
+
+//商品信息
+message GoodsInfoResponse {
+  int32 id = 1;
+  int32 categoryId = 2;
+  string name = 3;
+  string goodsSn = 4;
+  int32 clickNum = 5;
+  int32 soldNum = 6;
+  int32 favNum = 7;
+  float marketPrice = 9;
+  float shopPrice = 10;
+  string goodsBrief = 11;
+  string goodsDesc = 12;
+  int32 shipFree = 13;
+  repeated string images = 14;
+  repeated string descImages = 15;
+  string goodsFrontImage = 16;
+  int32 isNew = 17;
+  int32 isHot = 18;
+  int32 onSale = 19;
+  int64 addTime = 20;
+  CategoryBriefInfoResponse category = 21;
+  BrandInfoResponse brand = 22;
+}
+
+
+//分类信息结构体
+message CategoryBriefInfoResponse {
+  int32 id = 1;
+  string name = 2;
+}
+
+//品牌信息结构体
+message BrandInfoResponse {
+  int32 id = 1;
+  string name = 2;
+  string logo = 3;
+}
+
+//多件商品的id
+message BatchGoodsIdInfo {
+  repeated int32 id = 1;
+}
+
+//创建商品的消息体
+message CreateGoodsInfo {
+  int32 id = 1;
+  string name = 2;
+  string goodsSn = 3;
+  int32 stocks = 7; //库存，
+  float marketPrice = 8;
+  float shopPrice = 9;
+  string goodsBrief = 10;
+  string goodsDesc = 11;
+  int32 shipFree = 12;
+  repeated string images = 13;
+  repeated string descImages = 14;
+  string goodsFrontImage = 15;
+  int32 isNew = 16;
+  int32 isHot = 17;
+  int32 onSale = 18;
+  int32 categoryId = 19;
+  int32 brandId = 20;
+}
+
+//删除商品id
+message DeleteGoodsInfo {
+  int32 id = 1;
+}
+
+//商品详情
+message GoodInfoRequest {
+  int32 id = 1;
+}
+
+//分类列表响应
+message CategoryListResponse {
+  int32 total = 1;
+  repeated CategoryInfoResponse data = 2;
+  string jsonData = 3;
+}
+
+//单个分类数据
+message CategoryInfoResponse {
+  int32 id = 1;
+  string name = 2;
+  int32 parentCategory = 3;
+  int32 level = 4;
+  bool isTab = 5;
+}
+
+
+message CategoryInfoRequest {
+  int32 id = 1;
+  string name = 2;
+  int32 parentCategory = 3;
+  int32 level = 4;
+  bool isTab = 5;
+}
+
+
+message DeleteCategoryRequest {
+  int32 id = 1;
+}
+
+message BrandFilterRequest {
+  int32 pages = 1;
+  int32 pagePerNums = 2;
+}
+
+
+message BrandListResponse {
+  int32 total = 1;
+  repeated BrandInfoResponse data = 2;
+}
+
+
+message BrandRequest {
+  int32 id = 1;
+  string name = 2;
+  string logo = 3;
+}
+
+
+message BannerListResponse {
+  int32 total = 1;
+  repeated BannerResponse data = 2;
+}
+
+
+message BannerResponse {
+  int32 id = 1;
+  int32 index = 2;
+  string image = 3;
+  string url = 4;
+}
+
+message BannerRequest {
+  int32 id = 1;
+  int32 index = 2;
+  string image = 3;
+  string url = 4;
+}
+
+
+message CategoryBrandFilterRequest  {
+  int32 pages = 1;
+  int32 pagePerNums = 2;
+}
+
+message CategoryBrandListResponse {
+  int32 total = 1;
+  repeated CategoryBrandResponse data = 2;
+}
+
+message CategoryBrandResponse{
+  int32 id = 1;
+  BrandInfoResponse brand = 2;
+  CategoryInfoResponse category = 3;
+}
+
+
+message CategoryBrandRequest{
+  int32 id = 1;
+  int32 categoryId = 2;
+  int32 brandId = 3;
+}
+
+message Empty {}

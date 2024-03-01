@@ -1,0 +1,70 @@
+syntax = "proto3";
+import "timestamp.proto";
+option go_package = ".;proto";
+//用户服务
+service User{
+  //用户列表rpc方法
+  rpc GetUserList(PageInfo) returns (UserListResponse);
+  //通过手机号获取用户信息
+  rpc GetUserByMobile(MobileRequest) returns (UserInfoResponse);
+  //根据id查询用户信息
+  rpc GetUserById(IdRequest) returns (UserInfoResponse);
+  //创建用户
+  rpc CreateUser(CreateUserInfo) returns (UserInfoResponse);
+  //修改用户信息
+  rpc UpdateUser(UpdateUserInfo) returns (Empty);
+  //校验密码
+  rpc CheckPassWord(PasswordCheckInfo) returns (CheckResponse);
+}
+
+//分页请求消息题
+message PageInfo {
+  //页码
+  uint32 pn = 1;
+  //每页显示条数
+  uint32 pSize = 2;
+}
+
+//单条用户信息
+message UserInfoResponse {
+  int32 id = 1;
+  string passWord = 2;
+  string mobile = 3;
+  string nickName = 4;
+  uint64 birthDay = 5;
+  string gender = 6;
+  int32 role = 7;
+}
+message UserListResponse {
+  //总条数，用户表所有的条数
+  int32 total = 1;
+  //切片
+  repeated UserInfoResponse data = 2;
+}
+message CreateUserInfo {
+  string nickName = 1;
+  string passWord = 2;
+  string mobile = 3;
+  google.protobuf.Timestamp birthday = 4;
+}
+message MobileRequest{
+  string mobile = 1;
+}
+message IdRequest {
+  int32 id = 1;
+}
+message UpdateUserInfo {
+  int32 id = 1;
+  string nickName = 2;
+  string gender = 3;
+  uint64 birthDay = 4;
+}
+message PasswordCheckInfo {
+  string password = 1;
+  string encryptedPassword = 2;
+}
+message CheckResponse{
+  bool success = 1;
+}
+message Empty {
+}

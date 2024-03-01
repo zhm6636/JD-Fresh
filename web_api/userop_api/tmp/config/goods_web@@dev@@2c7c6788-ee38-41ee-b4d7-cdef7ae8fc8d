@@ -1,0 +1,18 @@
+logFilePath: "tmp/logs/log.log"
+cousulAddress: 127.0.0.1
+cousulPort: 8500
+
+Server:
+ name: goods_srv
+ tags: ["grpc","proto"]
+
+jwt:
+ key: 5833366
+
+Client:
+ address: 10.2.178.13
+ name: goods_web
+ port: 50002
+ tags: ["web","gin","api"]
+
+language: zh

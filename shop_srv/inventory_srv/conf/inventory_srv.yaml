@@ -1,0 +1,5 @@
+nacos:
+  addr: 42.192.108.133
+  port: 8848
+  namespaceId: d251d63a-3894-401b-8e0a-a1c607941ce9
+  dataId: inventory_srv

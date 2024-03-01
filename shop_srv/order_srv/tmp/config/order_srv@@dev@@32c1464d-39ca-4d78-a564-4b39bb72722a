@@ -1,0 +1,29 @@
+mysql: 
+ addr: "42.192.108.133"
+ port: 3306
+ username: root
+ password: Zhm5833366..
+ database: test
+
+redis:
+ addr: "42.192.108.133"
+ port: 6379
+ database: "0"
+
+elasticsearch:
+ addr: 42.192.108.133
+ port: 9200
+ 
+logFilePath: "tmp/logs/log.log"
+cousulAddress: 127.0.0.1
+cousulPort: 8500
+
+Server:
+ name: ["goods_srv","inventory_srv"]
+orderServer:
+ name: order_srv
+ address: 10.2.178.13
+ port: 50054
+ tags: ["grpc","proto","order"]
+
+language: zh
