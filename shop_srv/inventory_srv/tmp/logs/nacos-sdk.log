@@ -168,3 +168,100 @@
 2024-02-27T20:47:26.152+0800	INFO	rpc/rpc_client.go:234	config-0-c9611546-6095-4201-ad92-caa5440a85e3 success to connect to server {serverIp:42.192.108.133 serverPort:8848 serverGrpcPort:9848} on start up, connectionId=1709038054888_223.166.248.208_64670
 2024-02-27T20:47:26.160+0800	DEBUG	cache/disk_cache.go:136	no need to delete Config Encrypted Data Key cache file, file path tmp\config\encrypted-data-key\inventory_srv@@dev@@d251d63a-3894-401b-8e0a-a1c607941ce9, file doesn't exist.
 2024-02-27T20:47:26.160+0800	WARN	cache/disk_cache.go:155	read cache file Config Encrypted Data Key failed. cause file doesn't exist, file path: tmp\config\encrypted-data-key\inventory_srv@@dev@@d251d63a-3894-401b-8e0a-a1c607941ce9.: file not exist
+2024-03-03T18:40:35.703+0800	ERROR	cache/disk_cache.go:193	read Config Content failed. cause file doesn't exist, file path: tmp\config\inventory_srv@@dev@@d251d63a-3894-401b-8e0a-a1c607941ce9_failover.
+2024-03-03T18:40:35.712+0800	DEBUG	rpc/rpc_client.go:290	config-0-8a388aa4-7501-49a6-b93e-7852eb24c3a8 register server push request:ConfigChangeNotifyRequest handler:ConfigChangeNotifyRequestHandler
+2024-03-03T18:40:35.712+0800	DEBUG	rpc/rpc_client.go:290	config-0-8a388aa4-7501-49a6-b93e-7852eb24c3a8 register server push request:ConnectResetRequest handler:ConnectResetRequestHandler
+2024-03-03T18:40:35.712+0800	DEBUG	rpc/rpc_client.go:290	config-0-8a388aa4-7501-49a6-b93e-7852eb24c3a8 register server push request:ClientDetectionRequest handler:ClientDetectionRequestHandler
+2024-03-03T18:40:35.712+0800	INFO	rpc/rpc_client.go:224	[RpcClient.Start] config-0-8a388aa4-7501-49a6-b93e-7852eb24c3a8 try to connect to server on start up, server: {serverIp:42.192.108.133 serverPort:8848 serverGrpcPort:9848}
+2024-03-03T18:40:35.727+0800	INFO	util/common.go:96	Local IP:172.18.144.1
+2024-03-03T18:40:35.745+0800	ERROR	rpc/grpc_client.go:244	1709462441753_140.206.156.90_52323 Unsupported payload type
+2024-03-03T18:40:35.848+0800	INFO	rpc/rpc_client.go:234	config-0-8a388aa4-7501-49a6-b93e-7852eb24c3a8 success to connect to server {serverIp:42.192.108.133 serverPort:8848 serverGrpcPort:9848} on start up, connectionId=1709462441753_140.206.156.90_52323
+2024-03-03T18:40:35.857+0800	DEBUG	cache/disk_cache.go:136	no need to delete Config Encrypted Data Key cache file, file path tmp\config\encrypted-data-key\inventory_srv@@dev@@d251d63a-3894-401b-8e0a-a1c607941ce9, file doesn't exist.
+2024-03-03T18:40:35.857+0800	WARN	cache/disk_cache.go:155	read cache file Config Encrypted Data Key failed. cause file doesn't exist, file path: tmp\config\encrypted-data-key\inventory_srv@@dev@@d251d63a-3894-401b-8e0a-a1c607941ce9.: file not exist
+2024-03-03T18:41:47.381+0800	ERROR	cache/disk_cache.go:193	read Config Content failed. cause file doesn't exist, file path: tmp\config\inventory_srv@@dev@@d251d63a-3894-401b-8e0a-a1c607941ce9_failover.
+2024-03-03T18:41:47.389+0800	DEBUG	rpc/rpc_client.go:290	config-0-6b0bcdda-b2e6-467d-a3e2-3262f0aedd31 register server push request:ConfigChangeNotifyRequest handler:ConfigChangeNotifyRequestHandler
+2024-03-03T18:41:47.389+0800	DEBUG	rpc/rpc_client.go:290	config-0-6b0bcdda-b2e6-467d-a3e2-3262f0aedd31 register server push request:ConnectResetRequest handler:ConnectResetRequestHandler
+2024-03-03T18:41:47.389+0800	DEBUG	rpc/rpc_client.go:290	config-0-6b0bcdda-b2e6-467d-a3e2-3262f0aedd31 register server push request:ClientDetectionRequest handler:ClientDetectionRequestHandler
+2024-03-03T18:41:47.389+0800	INFO	rpc/rpc_client.go:224	[RpcClient.Start] config-0-6b0bcdda-b2e6-467d-a3e2-3262f0aedd31 try to connect to server on start up, server: {serverIp:42.192.108.133 serverPort:8848 serverGrpcPort:9848}
+2024-03-03T18:41:47.404+0800	INFO	util/common.go:96	Local IP:172.18.144.1
+2024-03-03T18:41:47.454+0800	ERROR	rpc/grpc_client.go:244	1709462513428_140.206.156.90_52388 Unsupported payload type
+2024-03-03T18:41:47.543+0800	INFO	rpc/rpc_client.go:234	config-0-6b0bcdda-b2e6-467d-a3e2-3262f0aedd31 success to connect to server {serverIp:42.192.108.133 serverPort:8848 serverGrpcPort:9848} on start up, connectionId=1709462513428_140.206.156.90_52388
+2024-03-03T18:41:47.559+0800	DEBUG	cache/disk_cache.go:136	no need to delete Config Encrypted Data Key cache file, file path tmp\config\encrypted-data-key\inventory_srv@@dev@@d251d63a-3894-401b-8e0a-a1c607941ce9, file doesn't exist.
+2024-03-03T18:41:47.559+0800	WARN	cache/disk_cache.go:155	read cache file Config Encrypted Data Key failed. cause file doesn't exist, file path: tmp\config\encrypted-data-key\inventory_srv@@dev@@d251d63a-3894-401b-8e0a-a1c607941ce9.: file not exist
+2024-03-03T20:47:46.474+0800	ERROR	rpc/rpc_client.go:421	client sendHealthCheck failed,err=rpc error: code = Unavailable desc = error reading from server: read tcp 10.2.178.13:52388->42.192.108.133:9848: wsarecv: An existing connection was forcibly closed by the remote host.
+2024-03-03T20:47:46.474+0800	INFO	rpc/rpc_client.go:407	config-0-6b0bcdda-b2e6-467d-a3e2-3262f0aedd31 server healthy check fail, currentConnection=1709462513428_140.206.156.90_52388
+2024-03-03T20:47:46.474+0800	INFO	rpc/rpc_client.go:322	config-0-6b0bcdda-b2e6-467d-a3e2-3262f0aedd31 try to re connect to a new server, server is not appointed, will choose a random server.
+2024-03-03T20:47:46.474+0800	ERROR	rpc/grpc_client.go:193	connectionId 1709462513428_140.206.156.90_52388 request stream error, switch server, error=rpc error: code = Unavailable desc = error reading from server: read tcp 10.2.178.13:52388->42.192.108.133:9848: wsarecv: An existing connection was forcibly closed by the remote host.
+2024-03-03T20:47:46.504+0800	ERROR	rpc/grpc_client.go:244	1709470072373_223.166.248.114_60875 Unsupported payload type
+2024-03-03T20:47:46.601+0800	INFO	rpc/rpc_client.go:335	config-0-6b0bcdda-b2e6-467d-a3e2-3262f0aedd31 success to connect a server {serverIp:42.192.108.133 serverPort:8848 serverGrpcPort:9848}, connectionId=1709470072373_223.166.248.114_60875
+2024-03-03T20:47:46.601+0800	INFO	rpc/rpc_client.go:339	config-0-6b0bcdda-b2e6-467d-a3e2-3262f0aedd31 abandon prev connection, server is {serverIp:42.192.108.133 serverPort:8848 serverGrpcPort:9848}, connectionId is 1709462513428_140.206.156.90_52388
+2024-03-04T15:51:47.543+0800	ERROR	cache/disk_cache.go:193	read Config Content failed. cause file doesn't exist, file path: tmp\config\inventory_srv@@dev@@d251d63a-3894-401b-8e0a-a1c607941ce9_failover.
+2024-03-04T15:51:47.550+0800	DEBUG	rpc/rpc_client.go:290	config-0-3bd4fbe3-2d06-447b-913c-67c01749c432 register server push request:ConfigChangeNotifyRequest handler:ConfigChangeNotifyRequestHandler
+2024-03-04T15:51:47.550+0800	DEBUG	rpc/rpc_client.go:290	config-0-3bd4fbe3-2d06-447b-913c-67c01749c432 register server push request:ConnectResetRequest handler:ConnectResetRequestHandler
+2024-03-04T15:51:47.550+0800	DEBUG	rpc/rpc_client.go:290	config-0-3bd4fbe3-2d06-447b-913c-67c01749c432 register server push request:ClientDetectionRequest handler:ClientDetectionRequestHandler
+2024-03-04T15:51:47.550+0800	INFO	rpc/rpc_client.go:224	[RpcClient.Start] config-0-3bd4fbe3-2d06-447b-913c-67c01749c432 try to connect to server on start up, server: {serverIp:42.192.108.133 serverPort:8848 serverGrpcPort:9848}
+2024-03-04T15:51:47.567+0800	INFO	util/common.go:96	Local IP:172.24.0.1
+2024-03-04T15:51:47.588+0800	ERROR	rpc/grpc_client.go:244	1709538713711_223.166.248.114_54067 Unsupported payload type
+2024-03-04T15:51:47.694+0800	INFO	rpc/rpc_client.go:234	config-0-3bd4fbe3-2d06-447b-913c-67c01749c432 success to connect to server {serverIp:42.192.108.133 serverPort:8848 serverGrpcPort:9848} on start up, connectionId=1709538713711_223.166.248.114_54067
+2024-03-04T15:51:47.717+0800	DEBUG	cache/disk_cache.go:136	no need to delete Config Encrypted Data Key cache file, file path tmp\config\encrypted-data-key\inventory_srv@@dev@@d251d63a-3894-401b-8e0a-a1c607941ce9, file doesn't exist.
+2024-03-04T15:51:47.717+0800	WARN	cache/disk_cache.go:155	read cache file Config Encrypted Data Key failed. cause file doesn't exist, file path: tmp\config\encrypted-data-key\inventory_srv@@dev@@d251d63a-3894-401b-8e0a-a1c607941ce9.: file not exist
+2024-03-04T15:52:04.553+0800	ERROR	cache/disk_cache.go:193	read Config Content failed. cause file doesn't exist, file path: tmp\config\inventory_srv@@dev@@d251d63a-3894-401b-8e0a-a1c607941ce9_failover.
+2024-03-04T15:52:04.560+0800	DEBUG	rpc/rpc_client.go:290	config-0-1935bbec-1e66-4204-b93d-1eb70700d577 register server push request:ConfigChangeNotifyRequest handler:ConfigChangeNotifyRequestHandler
+2024-03-04T15:52:04.560+0800	DEBUG	rpc/rpc_client.go:290	config-0-1935bbec-1e66-4204-b93d-1eb70700d577 register server push request:ConnectResetRequest handler:ConnectResetRequestHandler
+2024-03-04T15:52:04.560+0800	DEBUG	rpc/rpc_client.go:290	config-0-1935bbec-1e66-4204-b93d-1eb70700d577 register server push request:ClientDetectionRequest handler:ClientDetectionRequestHandler
+2024-03-04T15:52:04.560+0800	INFO	rpc/rpc_client.go:224	[RpcClient.Start] config-0-1935bbec-1e66-4204-b93d-1eb70700d577 try to connect to server on start up, server: {serverIp:42.192.108.133 serverPort:8848 serverGrpcPort:9848}
+2024-03-04T15:52:04.577+0800	INFO	util/common.go:96	Local IP:172.24.0.1
+2024-03-04T15:52:04.596+0800	ERROR	rpc/grpc_client.go:244	1709538730720_223.166.248.114_54078 Unsupported payload type
+2024-03-04T15:52:04.704+0800	INFO	rpc/rpc_client.go:234	config-0-1935bbec-1e66-4204-b93d-1eb70700d577 success to connect to server {serverIp:42.192.108.133 serverPort:8848 serverGrpcPort:9848} on start up, connectionId=1709538730720_223.166.248.114_54078
+2024-03-04T15:52:04.713+0800	DEBUG	cache/disk_cache.go:136	no need to delete Config Encrypted Data Key cache file, file path tmp\config\encrypted-data-key\inventory_srv@@dev@@d251d63a-3894-401b-8e0a-a1c607941ce9, file doesn't exist.
+2024-03-04T15:52:04.713+0800	WARN	cache/disk_cache.go:155	read cache file Config Encrypted Data Key failed. cause file doesn't exist, file path: tmp\config\encrypted-data-key\inventory_srv@@dev@@d251d63a-3894-401b-8e0a-a1c607941ce9.: file not exist
+2024-03-04T16:19:40.015+0800	ERROR	cache/disk_cache.go:193	read Config Content failed. cause file doesn't exist, file path: tmp\config\inventory_srv@@dev@@d251d63a-3894-401b-8e0a-a1c607941ce9_failover.
+2024-03-04T16:19:40.022+0800	DEBUG	rpc/rpc_client.go:290	config-0-e00ed0da-0828-4262-993a-1d4b4a7fa6b3 register server push request:ConfigChangeNotifyRequest handler:ConfigChangeNotifyRequestHandler
+2024-03-04T16:19:40.022+0800	DEBUG	rpc/rpc_client.go:290	config-0-e00ed0da-0828-4262-993a-1d4b4a7fa6b3 register server push request:ConnectResetRequest handler:ConnectResetRequestHandler
+2024-03-04T16:19:40.022+0800	DEBUG	rpc/rpc_client.go:290	config-0-e00ed0da-0828-4262-993a-1d4b4a7fa6b3 register server push request:ClientDetectionRequest handler:ClientDetectionRequestHandler
+2024-03-04T16:19:40.022+0800	INFO	rpc/rpc_client.go:224	[RpcClient.Start] config-0-e00ed0da-0828-4262-993a-1d4b4a7fa6b3 try to connect to server on start up, server: {serverIp:42.192.108.133 serverPort:8848 serverGrpcPort:9848}
+2024-03-04T16:19:40.039+0800	INFO	util/common.go:96	Local IP:172.24.0.1
+2024-03-04T16:19:40.054+0800	ERROR	rpc/grpc_client.go:244	1709540386148_223.166.248.114_55496 Unsupported payload type
+2024-03-04T16:19:40.157+0800	INFO	rpc/rpc_client.go:234	config-0-e00ed0da-0828-4262-993a-1d4b4a7fa6b3 success to connect to server {serverIp:42.192.108.133 serverPort:8848 serverGrpcPort:9848} on start up, connectionId=1709540386148_223.166.248.114_55496
+2024-03-04T16:19:40.170+0800	DEBUG	cache/disk_cache.go:136	no need to delete Config Encrypted Data Key cache file, file path tmp\config\encrypted-data-key\inventory_srv@@dev@@d251d63a-3894-401b-8e0a-a1c607941ce9, file doesn't exist.
+2024-03-04T16:19:40.170+0800	WARN	cache/disk_cache.go:155	read cache file Config Encrypted Data Key failed. cause file doesn't exist, file path: tmp\config\encrypted-data-key\inventory_srv@@dev@@d251d63a-3894-401b-8e0a-a1c607941ce9.: file not exist
+2024-03-04T16:21:45.451+0800	ERROR	cache/disk_cache.go:193	read Config Content failed. cause file doesn't exist, file path: tmp\config\inventory_srv@@dev@@d251d63a-3894-401b-8e0a-a1c607941ce9_failover.
+2024-03-04T16:21:45.459+0800	DEBUG	rpc/rpc_client.go:290	config-0-eb6e606d-0f91-4594-ada9-47a97a74264b register server push request:ConfigChangeNotifyRequest handler:ConfigChangeNotifyRequestHandler
+2024-03-04T16:21:45.459+0800	DEBUG	rpc/rpc_client.go:290	config-0-eb6e606d-0f91-4594-ada9-47a97a74264b register server push request:ConnectResetRequest handler:ConnectResetRequestHandler
+2024-03-04T16:21:45.459+0800	DEBUG	rpc/rpc_client.go:290	config-0-eb6e606d-0f91-4594-ada9-47a97a74264b register server push request:ClientDetectionRequest handler:ClientDetectionRequestHandler
+2024-03-04T16:21:45.459+0800	INFO	rpc/rpc_client.go:224	[RpcClient.Start] config-0-eb6e606d-0f91-4594-ada9-47a97a74264b try to connect to server on start up, server: {serverIp:42.192.108.133 serverPort:8848 serverGrpcPort:9848}
+2024-03-04T16:21:45.476+0800	INFO	util/common.go:96	Local IP:172.24.0.1
+2024-03-04T16:21:45.491+0800	ERROR	rpc/grpc_client.go:244	1709540511584_223.166.248.114_55643 Unsupported payload type
+2024-03-04T16:21:45.590+0800	INFO	rpc/rpc_client.go:234	config-0-eb6e606d-0f91-4594-ada9-47a97a74264b success to connect to server {serverIp:42.192.108.133 serverPort:8848 serverGrpcPort:9848} on start up, connectionId=1709540511584_223.166.248.114_55643
+2024-03-04T16:21:45.599+0800	DEBUG	cache/disk_cache.go:136	no need to delete Config Encrypted Data Key cache file, file path tmp\config\encrypted-data-key\inventory_srv@@dev@@d251d63a-3894-401b-8e0a-a1c607941ce9, file doesn't exist.
+2024-03-04T16:21:45.599+0800	WARN	cache/disk_cache.go:155	read cache file Config Encrypted Data Key failed. cause file doesn't exist, file path: tmp\config\encrypted-data-key\inventory_srv@@dev@@d251d63a-3894-401b-8e0a-a1c607941ce9.: file not exist
+2024-03-04T16:25:28.189+0800	ERROR	cache/disk_cache.go:193	read Config Content failed. cause file doesn't exist, file path: tmp\config\inventory_srv@@dev@@d251d63a-3894-401b-8e0a-a1c607941ce9_failover.
+2024-03-04T16:25:28.196+0800	DEBUG	rpc/rpc_client.go:290	config-0-cd18d745-1314-4238-a730-0718d20ba02f register server push request:ConfigChangeNotifyRequest handler:ConfigChangeNotifyRequestHandler
+2024-03-04T16:25:28.196+0800	DEBUG	rpc/rpc_client.go:290	config-0-cd18d745-1314-4238-a730-0718d20ba02f register server push request:ConnectResetRequest handler:ConnectResetRequestHandler
+2024-03-04T16:25:28.196+0800	DEBUG	rpc/rpc_client.go:290	config-0-cd18d745-1314-4238-a730-0718d20ba02f register server push request:ClientDetectionRequest handler:ClientDetectionRequestHandler
+2024-03-04T16:25:28.196+0800	INFO	rpc/rpc_client.go:224	[RpcClient.Start] config-0-cd18d745-1314-4238-a730-0718d20ba02f try to connect to server on start up, server: {serverIp:42.192.108.133 serverPort:8848 serverGrpcPort:9848}
+2024-03-04T16:25:28.212+0800	INFO	util/common.go:96	Local IP:172.24.0.1
+2024-03-04T16:25:28.225+0800	ERROR	rpc/grpc_client.go:244	1709540734315_223.166.248.114_55766 Unsupported payload type
+2024-03-04T16:25:28.333+0800	INFO	rpc/rpc_client.go:234	config-0-cd18d745-1314-4238-a730-0718d20ba02f success to connect to server {serverIp:42.192.108.133 serverPort:8848 serverGrpcPort:9848} on start up, connectionId=1709540734315_223.166.248.114_55766
+2024-03-04T16:25:28.343+0800	DEBUG	cache/disk_cache.go:136	no need to delete Config Encrypted Data Key cache file, file path tmp\config\encrypted-data-key\inventory_srv@@dev@@d251d63a-3894-401b-8e0a-a1c607941ce9, file doesn't exist.
+2024-03-04T16:25:28.343+0800	WARN	cache/disk_cache.go:155	read cache file Config Encrypted Data Key failed. cause file doesn't exist, file path: tmp\config\encrypted-data-key\inventory_srv@@dev@@d251d63a-3894-401b-8e0a-a1c607941ce9.: file not exist
+2024-03-04T16:33:37.701+0800	ERROR	cache/disk_cache.go:193	read Config Content failed. cause file doesn't exist, file path: tmp\config\inventory_srv@@dev@@d251d63a-3894-401b-8e0a-a1c607941ce9_failover.
+2024-03-04T16:33:37.708+0800	DEBUG	rpc/rpc_client.go:290	config-0-e678bfbc-fdb1-4658-b18b-b2ea854909e2 register server push request:ConfigChangeNotifyRequest handler:ConfigChangeNotifyRequestHandler
+2024-03-04T16:33:37.708+0800	DEBUG	rpc/rpc_client.go:290	config-0-e678bfbc-fdb1-4658-b18b-b2ea854909e2 register server push request:ConnectResetRequest handler:ConnectResetRequestHandler
+2024-03-04T16:33:37.708+0800	DEBUG	rpc/rpc_client.go:290	config-0-e678bfbc-fdb1-4658-b18b-b2ea854909e2 register server push request:ClientDetectionRequest handler:ClientDetectionRequestHandler
+2024-03-04T16:33:37.709+0800	INFO	rpc/rpc_client.go:224	[RpcClient.Start] config-0-e678bfbc-fdb1-4658-b18b-b2ea854909e2 try to connect to server on start up, server: {serverIp:42.192.108.133 serverPort:8848 serverGrpcPort:9848}
+2024-03-04T16:33:37.724+0800	INFO	util/common.go:96	Local IP:172.24.0.1
+2024-03-04T16:33:37.740+0800	ERROR	rpc/grpc_client.go:244	1709541223822_223.166.248.114_56055 Unsupported payload type
+2024-03-04T16:33:37.842+0800	INFO	rpc/rpc_client.go:234	config-0-e678bfbc-fdb1-4658-b18b-b2ea854909e2 success to connect to server {serverIp:42.192.108.133 serverPort:8848 serverGrpcPort:9848} on start up, connectionId=1709541223822_223.166.248.114_56055
+2024-03-04T16:33:37.853+0800	DEBUG	cache/disk_cache.go:136	no need to delete Config Encrypted Data Key cache file, file path tmp\config\encrypted-data-key\inventory_srv@@dev@@d251d63a-3894-401b-8e0a-a1c607941ce9, file doesn't exist.
+2024-03-04T16:33:37.853+0800	WARN	cache/disk_cache.go:155	read cache file Config Encrypted Data Key failed. cause file doesn't exist, file path: tmp\config\encrypted-data-key\inventory_srv@@dev@@d251d63a-3894-401b-8e0a-a1c607941ce9.: file not exist
+2024-03-04T16:54:43.336+0800	ERROR	cache/disk_cache.go:193	read Config Content failed. cause file doesn't exist, file path: tmp\config\inventory_srv@@dev@@d251d63a-3894-401b-8e0a-a1c607941ce9_failover.
+2024-03-04T16:54:43.343+0800	DEBUG	rpc/rpc_client.go:290	config-0-2d4ee81f-3311-459f-b24c-805d5efe1d29 register server push request:ConfigChangeNotifyRequest handler:ConfigChangeNotifyRequestHandler
+2024-03-04T16:54:43.343+0800	DEBUG	rpc/rpc_client.go:290	config-0-2d4ee81f-3311-459f-b24c-805d5efe1d29 register server push request:ConnectResetRequest handler:ConnectResetRequestHandler
+2024-03-04T16:54:43.343+0800	DEBUG	rpc/rpc_client.go:290	config-0-2d4ee81f-3311-459f-b24c-805d5efe1d29 register server push request:ClientDetectionRequest handler:ClientDetectionRequestHandler
+2024-03-04T16:54:43.343+0800	INFO	rpc/rpc_client.go:224	[RpcClient.Start] config-0-2d4ee81f-3311-459f-b24c-805d5efe1d29 try to connect to server on start up, server: {serverIp:42.192.108.133 serverPort:8848 serverGrpcPort:9848}
+2024-03-04T16:54:43.361+0800	INFO	util/common.go:96	Local IP:172.24.0.1
+2024-03-04T16:54:43.582+0800	ERROR	rpc/grpc_client.go:244	1709542489573_223.166.248.114_57298 Unsupported payload type
+2024-03-04T16:54:43.617+0800	INFO	rpc/rpc_client.go:234	config-0-2d4ee81f-3311-459f-b24c-805d5efe1d29 success to connect to server {serverIp:42.192.108.133 serverPort:8848 serverGrpcPort:9848} on start up, connectionId=1709542489573_223.166.248.114_57298
+2024-03-04T16:54:43.705+0800	DEBUG	cache/disk_cache.go:136	no need to delete Config Encrypted Data Key cache file, file path tmp\config\encrypted-data-key\inventory_srv@@dev@@d251d63a-3894-401b-8e0a-a1c607941ce9, file doesn't exist.
+2024-03-04T16:54:43.705+0800	WARN	cache/disk_cache.go:155	read cache file Config Encrypted Data Key failed. cause file doesn't exist, file path: tmp\config\encrypted-data-key\inventory_srv@@dev@@d251d63a-3894-401b-8e0a-a1c607941ce9.: file not exist

@@ -32,6 +32,7 @@ type OrderClient interface {
 	Create(ctx context.Context, in *OrderRequest, opts ...grpc.CallOption) (*OrderInfoResponse, error)
 	OrderList(ctx context.Context, in *OrderFilterRequest, opts ...grpc.CallOption) (*OrderListResponse, error)
 	OrderDetail(ctx context.Context, in *OrderRequest, opts ...grpc.CallOption) (*OrderInfoDetailResponse, error)
+	OrderDetailBySn(ctx context.Context, in *OrderDetailBySnRequest, opts ...grpc.CallOption) (*OrderInfoDetailResponse, error)
 	UpdateOrderStatus(ctx context.Context, in *OrderStatus, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
@@ -106,6 +107,15 @@ func (c *orderClient) OrderDetail(ctx context.Context, in *OrderRequest, opts ..
 	return out, nil
 }
 
+func (c *orderClient) OrderDetailBySn(ctx context.Context, in *OrderDetailBySnRequest, opts ...grpc.CallOption) (*OrderInfoDetailResponse, error) {
+	out := new(OrderInfoDetailResponse)
+	err := c.cc.Invoke(ctx, "/Order/OrderDetailBySn", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *orderClient) UpdateOrderStatus(ctx context.Context, in *OrderStatus, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, "/Order/UpdateOrderStatus", in, out, opts...)
@@ -128,6 +138,7 @@ type OrderServer interface {
 	Create(context.Context, *OrderRequest) (*OrderInfoResponse, error)
 	OrderList(context.Context, *OrderFilterRequest) (*OrderListResponse, error)
 	OrderDetail(context.Context, *OrderRequest) (*OrderInfoDetailResponse, error)
+	OrderDetailBySn(context.Context, *OrderDetailBySnRequest) (*OrderInfoDetailResponse, error)
 	UpdateOrderStatus(context.Context, *OrderStatus) (*emptypb.Empty, error)
 	mustEmbedUnimplementedOrderServer()
 }
@@ -156,6 +167,9 @@ func (UnimplementedOrderServer) OrderList(context.Context, *OrderFilterRequest) 
 }
 func (UnimplementedOrderServer) OrderDetail(context.Context, *OrderRequest) (*OrderInfoDetailResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method OrderDetail not implemented")
+}
+func (UnimplementedOrderServer) OrderDetailBySn(context.Context, *OrderDetailBySnRequest) (*OrderInfoDetailResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method OrderDetailBySn not implemented")
 }
 func (UnimplementedOrderServer) UpdateOrderStatus(context.Context, *OrderStatus) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateOrderStatus not implemented")
@@ -299,6 +313,24 @@ func _Order_OrderDetail_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Order_OrderDetailBySn_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(OrderDetailBySnRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OrderServer).OrderDetailBySn(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/Order/OrderDetailBySn",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OrderServer).OrderDetailBySn(ctx, req.(*OrderDetailBySnRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Order_UpdateOrderStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(OrderStatus)
 	if err := dec(in); err != nil {
@@ -351,6 +383,10 @@ var Order_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "OrderDetail",
 			Handler:    _Order_OrderDetail_Handler,
+		},
+		{
+			MethodName: "OrderDetailBySn",
+			Handler:    _Order_OrderDetailBySn_Handler,
 		},
 		{
 			MethodName: "UpdateOrderStatus",

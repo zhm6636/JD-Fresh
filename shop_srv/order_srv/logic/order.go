@@ -2,10 +2,17 @@ package logic
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"math/rand"
+	"strconv"
+	"sync"
 	"time"
 
+	"github.com/apache/rocketmq-client-go/v2"
+	"github.com/apache/rocketmq-client-go/v2/consumer"
+	"github.com/apache/rocketmq-client-go/v2/primitive"
+	"github.com/apache/rocketmq-client-go/v2/producer"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -120,8 +127,64 @@ func (o OrderServer) Create(ctx context.Context, req *proto.OrderRequest) (*prot
 		Mobile:  OrderInfo.SingerMobile,
 		//AddTime: OrderInfo.CreatedAt.Format("2006-01-02 15:04:05"),
 	}
+
+	// 创建 RocketMQ 生产者
+	producer, err := rocketmq.NewTransactionProducer(
+		NewTransactionListener(),
+		producer.WithNsResolver(primitive.NewPassthroughResolver([]string{"127.0.0.1:9876"})),
+		producer.WithRetry(1),
+	)
+	if err != nil {
+		fmt.Printf("Failed to create producer: %v\n", err)
+
+	}
+
+	err = producer.Start()
+	if err != nil {
+		fmt.Printf("Failed to start producer: %v\n", err)
+
+	}
+
+	// 模拟订单支付信息
+	orderID := "支付信息"
+	msg := primitive.NewMessage("OrderPaidTopic", []byte(orderID))
+	msg.WithDelayTimeLevel(5)
+
+	// 发送半事务消息
+	_, err = producer.SendMessageInTransaction(context.Background(), msg)
+	if err != nil {
+		fmt.Printf("Failed to send half message: %v\n", err)
+	}
+
+	// 关闭生产者
+	producer.Shutdown()
+
 	tx.Commit()
 	return OrderInfoResponse, nil
+}
+
+func NewTransactionListener() *TransactionListener {
+	return &TransactionListener{
+		localTrans: new(sync.Map),
+	}
+}
+
+// 事务监听器
+type TransactionListener struct {
+	localTrans       *sync.Map
+	transactionIndex int32
+}
+
+func (tl *TransactionListener) ExecuteLocalTransaction(msg *primitive.Message) primitive.LocalTransactionState {
+	// 在本地执行事务，可以在这里更新数据库等操作
+	// 这里只是简单示例，直接返回事务提交状态
+	return primitive.CommitMessageState
+}
+
+func (tl *TransactionListener) CheckLocalTransaction(msg *primitive.MessageExt) primitive.LocalTransactionState {
+	// 检查本地事务状态，这里可以查询数据库等操作
+	// 假设订单支付成功返回事务提交状态，否则返回回滚状态
+	return primitive.CommitMessageState
 }
 
 func (o OrderServer) OrderList(ctx context.Context, req *proto.OrderFilterRequest) (*proto.OrderListResponse, error) {
@@ -204,10 +267,64 @@ func (o OrderServer) OrderDetail(ctx context.Context, req *proto.OrderRequest) (
 	return &rsp, nil
 }
 
+func (o OrderServer) OrderDetailBySn(ctx context.Context, req *proto.OrderDetailBySnRequest) (*proto.OrderInfoDetailResponse, error) {
+	var order model.OrderInfo
+	var rsp proto.OrderInfoDetailResponse
+
+	//这个订单的id是否是当前用户的订单， 如果在web层用户传递过来一个id的订单， web层应该先查询一下订单id是否是当前用户的
+	//在个人中心可以这样做，但是如果是后台管理系统，web层如果是后台管理系统 那么只传递order的id，如果是电商系统还需要一个用户的id
+	if result := global.MysqlConf.DB.Where(&model.OrderInfo{OrderSn: req.OrderSn}).First(&order); result.RowsAffected == 0 {
+		return nil, status.Errorf(codes.NotFound, "订单不存在")
+	}
+
+	//如果订单查询出来，返回订单信息
+	orderInfo := proto.OrderInfoResponse{}
+	orderInfo.Id = order.ID
+	orderInfo.UserId = order.User
+	orderInfo.OrderSn = order.OrderSn
+	orderInfo.PayType = order.PayType
+	orderInfo.Status = order.Status
+	orderInfo.Post = order.Post
+	orderInfo.Total = order.OrderMount
+	orderInfo.Address = order.Address
+	orderInfo.Name = order.SignerName
+	orderInfo.Mobile = order.SingerMobile
+
+	rsp.OrderInfo = &orderInfo
+
+	//如果一个订单是多个商品，我要知道是那几个商品，所以说定义一个切片，用来保存该订单下所有商品信息
+	var orderGoods []model.OrderGoods
+	if result := global.MysqlConf.DB.Where(&model.OrderGoods{Order: order.ID}).Find(&orderGoods); result.Error != nil {
+		return nil, result.Error
+	}
+
+	for _, orderGood := range orderGoods {
+		rsp.Goods = append(rsp.Goods, &proto.OrderItemResponse{
+			GoodsId:    orderGood.Goods,
+			GoodsName:  orderGood.GoodsName,
+			GoodsPrice: orderGood.GoodsPrice,
+			GoodsImage: orderGood.GoodsImage,
+			Nums:       orderGood.Nums,
+		})
+	}
+
+	return &rsp, nil
+}
+
 func (o OrderServer) UpdateOrderStatus(ctx context.Context, req *proto.OrderStatus) (*emptypb.Empty, error) {
 	//先查询，再更新 实际上有两条sql执行， select 和 update语句
-	if result := global.MysqlConf.DB.Model(&model.OrderInfo{}).Where("order_sn = ?", req.OrderSn).Update("status", req.Status); result.RowsAffected == 0 {
+	var order = model.OrderInfo{}
+	res := global.MysqlConf.DB.Model(&model.OrderInfo{}).Where("order_sn = ?", req.OrderSn).First(&order)
+	if res.RowsAffected == 0 {
 		return nil, status.Errorf(codes.NotFound, "订单不存在")
+	}
+	order.Status = strconv.Itoa(int(req.Status))
+	order.PayType = strconv.Itoa(int(req.PayType))
+	order.TradeNo = req.TradeNo
+	result := global.MysqlConf.DB.Save(&order)
+
+	if result.RowsAffected == 0 {
+		return nil, status.Errorf(codes.NotFound, "更新订单失败")
 	}
 	return &emptypb.Empty{}, nil
 }
@@ -230,4 +347,44 @@ func Paginate(page, size int) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		return db.Limit(size).Offset((page - 1) * size)
 	}
+}
+
+// 延迟队列
+// 1.订单状态修改
+// 2.库存归还
+func OrderTimeOut(ctx context.Context, msgs ...*primitive.MessageExt) (consumer.ConsumeResult, error) {
+	for i := range msgs {
+		orderInfo := model.OrderInfo{}
+		json.Unmarshal(msgs[i].Body, &orderInfo)
+		tx := global.MysqlConf.DB.Begin()
+		order := model.OrderInfo{}
+		result := tx.Model(model.OrderInfo{}).Where(model.OrderInfo{OrderSn: orderInfo.OrderSn}).First(&order)
+		if result.RowsAffected == 0 {
+			return consumer.ConsumeRetryLater, nil
+		}
+
+		//判断是否支付成功
+		if order.Status != "1" {
+			order.Status = "4"
+		}
+		res := tx.Save(&order)
+		if res.Error != nil {
+			return consumer.ConsumeRetryLater, nil
+		}
+
+		msg := primitive.NewMessage("ReBackStock", msgs[i].Body)
+		global.RocketMqProducer.SendSync(context.Background(), msg)
+		commit := tx.Commit()
+		if commit.Error == nil {
+			return consumer.ConsumeSuccess, nil
+		}
+	}
+
+	//在RocketMQ中，这几个常量代表了消费者处理消息时可能的不同结果：
+	//ConsumeSuccess：表示消息成功被消费，消费者成功处理了该条消息。
+	//ConsumeRetryLater：表示消费者暂时无法处理该消息，但希望稍后重新尝试消费。通常在遇到某些可恢复的错误时会选择这个选项，以便稍后再次尝试处理消息。
+	//Commit：表示消息被成功处理，并且消费者确认了已经成功处理该消息，消息可以被标记为已消费。
+	//Rollback：表示消费者无法处理该消息，需要将消息回滚到之前的状态，以便稍后再次尝试消费。通常在遇到无法恢复的错误或者需要重新处理的情况下选择这个选项。
+	//SuspendCurrentQueueAMoment：表示暂时挂起当前队列一段时间，可能是因为消费者当前的处理能力不足以处理更多的消息，需要等待一段时间后再继续消费。
+	return consumer.ConsumeSuccess, nil
 }

@@ -3,6 +3,7 @@ package middlewares
 import (
 	"errors"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -67,7 +68,7 @@ var (
 
 func NewJWT() *JWT {
 	return &JWT{
-		[]byte(global.NacosConf["jwt"].(map[string]interface{})["key"].(string)), //可以设置过期时间
+		[]byte(strconv.Itoa(global.Nacos["jwt"].(map[string]interface{})["key"].(int))), //可以设置过期时间
 	}
 }
 

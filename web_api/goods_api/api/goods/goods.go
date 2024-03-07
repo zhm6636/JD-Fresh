@@ -244,6 +244,7 @@ func Stocks(ctx *gin.Context) {
 		ctx.Status(http.StatusNotFound)
 		return
 	}
+	//global.GoodsClient .St
 
 	//TODO 商品的库存
 	return

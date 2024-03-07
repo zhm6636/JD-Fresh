@@ -40,6 +40,7 @@ import (
 	"gorm.io/gorm/logger"
 
 	"order_api/proto"
+	"order_api/verify"
 )
 
 // 初始化服务依赖
@@ -402,6 +403,16 @@ func InitConsul() (*api.Client, string) {
 }
 
 func InitWebServer(router *gin.Engine) {
+	//注册验证器
+	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
+		_ = v.RegisterValidation("mobile", verify.ValidateMobile)
+		_ = v.RegisterTranslation("mobile", Trans, func(ut ut.Translator) error {
+			return ut.Add("mobile", "{0} 非法的手机号码!", true) // see universal-translator for details
+		}, func(ut ut.Translator, fe validator.FieldError) string {
+			t, _ := ut.T("mobile", fe.Field())
+			return t
+		})
+	}
 	// 创建 HTTP 服务器
 	server := &http.Server{
 		Addr:    ":" + strconv.Itoa(Nacos["Client"].(map[string]interface{})["port"].(int)),

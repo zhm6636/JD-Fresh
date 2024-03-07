@@ -11,7 +11,11 @@ service Order {
   rpc Create(OrderRequest) returns (OrderInfoResponse); //创建订单
   rpc OrderList(OrderFilterRequest) returns (OrderListResponse); // 订单列表
   rpc OrderDetail(OrderRequest) returns (OrderInfoDetailResponse); // 订单详情
+  rpc OrderDetailBySn(OrderDetailBySnRequest) returns (OrderInfoDetailResponse); // 订单详情
   rpc UpdateOrderStatus(OrderStatus) returns (google.protobuf.Empty); // 修改订单状态
+}
+message OrderDetailBySnRequest {
+  string OrderSn = 1;
 }
 message UserInfo {
   int32 id = 1;
@@ -19,7 +23,9 @@ message UserInfo {
 message OrderStatus {
   int32 id = 1;
   string orderSn = 2;
-  string status = 3;
+  int32 status = 3;
+  int32 payType = 4;
+  string tradeNo = 5;
 }
 message CartItemRequest {
   int32 id = 1;

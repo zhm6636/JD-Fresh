@@ -45,7 +45,7 @@ func InitServer() {
 	//InitNaCos()
 	InitMysql()
 	InitRedis()
-	InitElastic()
+	//InitElastic()
 	//InitConsul()
 }
 
@@ -364,7 +364,7 @@ func InitElastic() {
 	var err error
 	addr := Nacos["elasticsearch"].(map[string]interface{})["addr"].(string)
 	port := Nacos["elasticsearch"].(map[string]interface{})["port"].(int)
-	url := fmt.Sprintf("http://%s:%d", addr, port)
+	url := fmt.Sprintf("https://%s:%d", addr, port)
 	esClient, err = elastic.NewClient(elastic.SetURL(url), elastic.SetSniff(false))
 	if err != nil {
 		panic(err)

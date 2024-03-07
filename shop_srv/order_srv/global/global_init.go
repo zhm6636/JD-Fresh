@@ -11,6 +11,10 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/apache/rocketmq-client-go/v2"
+	"github.com/apache/rocketmq-client-go/v2/consumer"
+	"github.com/apache/rocketmq-client-go/v2/primitive"
+	"github.com/apache/rocketmq-client-go/v2/producer"
 	"github.com/fsnotify/fsnotify"
 	"github.com/google/uuid"
 	"github.com/hashicorp/consul/api"
@@ -30,6 +34,7 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 
+	"order_srv/logic"
 	"order_srv/proto/goods_srv"
 	"order_srv/proto/inventory_srv"
 )
@@ -49,6 +54,7 @@ func InitServer() {
 	InitRpc()
 	InitMysql()
 	InitRedis()
+	InitRocketMq()
 	InitElastic()
 	//InitConsul()
 }
@@ -155,6 +161,21 @@ func InitMysql() {
 	sqlDB.SetMaxIdleConns(10)
 	sqlDB.SetMaxOpenConns(100)
 	sqlDB.SetConnMaxLifetime(time.Hour)
+
+}
+func InitRocketMq() {
+	//把信息追加到延迟队列中
+	//连接rocketmq
+
+	RocketMqProducer, _ = rocketmq.NewProducer(
+		producer.WithNsResolver(primitive.NewPassthroughResolver([]string{fmt.Sprintf("%s:%d", Nacos["rockermq"].(map[string]interface{})["host"].(string), Nacos["rockermq"].(map[string]interface{})["port"].(int))})),
+		producer.WithRetry(2),
+	)
+	//开始生产
+	err := RocketMqProducer.Start()
+	if err != nil {
+		zap.S().Panic("rocketmq生产者开启失败")
+	}
 
 }
 
@@ -313,11 +334,26 @@ func InitRPCServer(g *grpc.Server) {
 
 	consulClient, id := InitConsul()
 
+	//启动监听库存归还的延迟队列
+	c, _ := rocketmq.NewPushConsumer(
+		consumer.WithGroupName("order_timeout_group"),
+		consumer.WithNsResolver(primitive.NewPassthroughResolver([]string{fmt.Sprintf("%s:%d", "127.0.0.1", 9876)})),
+	)
+
+	if err := c.Subscribe("", consumer.MessageSelector{}, logic.OrderTimeOut); err != nil {
+		fmt.Println("读取消息失败")
+	}
+	//rocketmq消费者启动
+	_ = c.Start()
+
 	// 等待中断信号，然后注销服务
 	ch := make(chan os.Signal, 1)
 	signal.Notify(ch, syscall.SIGINT, syscall.SIGTERM)
 	<-ch
 	fmt.Println("Shutting down...")
+	//释放rocketmq连接
+	_ = RocketMqProducer.Shutdown()
+	_ = c.Shutdown()
 	err = consulClient.Agent().ServiceDeregister(id)
 	if err != nil {
 		zap.S().Fatal(err)

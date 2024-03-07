@@ -15,4 +15,5 @@ func main() {
 	proto.RegisterGoodsServer(g, s)
 
 	global.InitRPCServer(g)
+
 }

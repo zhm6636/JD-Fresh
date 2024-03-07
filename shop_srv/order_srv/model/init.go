@@ -22,7 +22,7 @@ func init() {
 		//NoLowerCase:   true, //跳过蛇形命名
 	}
 
-	err := db.AutoMigrate()
+	err := db.AutoMigrate(&OrderInfo{}, &OrderGoods{}, &ShoppingCart{})
 	if err != nil {
 		zap.S().Panic(err)
 	}

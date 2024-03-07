@@ -116,7 +116,7 @@ func New(ctx *gin.Context) {
 		})
 		return
 	}
-	err = client.LoadAliPayPublicKey(global.Nacos["aliPrivateKey"].(string))
+	err = client.LoadAliPayPublicKey(global.Nacos["alipay"].(map[string]interface{})["AliPublicKey"].(string))
 	if err != nil {
 		zap.S().Errorw("加载支付宝的公钥失败")
 		ctx.JSON(http.StatusInternalServerError, gin.H{

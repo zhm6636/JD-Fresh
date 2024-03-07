@@ -14,9 +14,12 @@ func InitOrderRouter(Router *gin.RouterGroup) {
 		OrderRouter.GET("", order.List)       // 订单列表
 		OrderRouter.POST("", order.New)       // 新建订单
 		OrderRouter.GET("/:id", order.Detail) // 订单详情
+
 	}
-	PayRouter := Router.Group("pay")
+	PayRouter := Router.Group("/pay")
 	{
-		PayRouter.POST("alipay/notify", pay.Notify)
+		PayRouter.POST("", middlewares.JWTAuth(), pay.AliPay) // 支付连接
+		PayRouter.POST("/alipay/notify", pay.NotifyUrl)
+		PayRouter.GET("/alipay/return", pay.ReturnUrl)
 	}
 }

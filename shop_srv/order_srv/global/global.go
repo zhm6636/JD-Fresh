@@ -1,6 +1,7 @@
 package global
 
 import (
+	"github.com/apache/rocketmq-client-go/v2"
 	"github.com/hashicorp/consul/api"
 
 	goodssrv "order_srv/proto/goods_srv"
@@ -17,6 +18,7 @@ var (
 	ConsulClient   *api.Client
 	UserServerConf *UserServerConfig
 	//esClient       *elastic.Client
-	GoodsClient     goodssrv.GoodsClient
-	InventoryClient inventorysrv.InventoryClient
+	RocketMqProducer rocketmq.Producer
+	GoodsClient      goodssrv.GoodsClient
+	InventoryClient  inventorysrv.InventoryClient
 )
