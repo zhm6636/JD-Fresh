@@ -15,6 +15,9 @@ import (
 	"time"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/grpc-ecosystem/grpc-opentracing/go/otgrpc"
+	"github.com/opentracing/opentracing-go"
+	"github.com/uber/jaeger-client-go/config"
 	"gopkg.in/yaml.v3"
 
 	"github.com/fsnotify/fsnotify"
@@ -218,6 +221,26 @@ func InitRpc() {
 			zap.S().Panic("Failed to discover service with Consul: %v", err)
 		}
 
+		cfg := config.Configuration{
+			ServiceName: "order_web",
+			Sampler: &config.SamplerConfig{
+				Type:  "const",
+				Param: 1,
+			},
+			Reporter: &config.ReporterConfig{
+				LogSpans: true,
+				//LocalAgentHostPort: "42.192.108.133:6831",
+			},
+		}
+
+		tracer, _, err := cfg.NewTracer()
+		if err != nil {
+			log.Fatal(err)
+		}
+		//defer closer.Close()
+
+		opentracing.SetGlobalTracer(tracer)
+
 		// 构建 gRPC 连接
 		//var conn *grpc.ClientConn
 		conn, err := grpc.Dial(
@@ -225,6 +248,8 @@ func InitRpc() {
 			//"consul://10.2.178.13:8500/user_srv?wait=14s",
 			grpc.WithBlock(),
 			grpc.WithTransportCredentials(insecure.NewCredentials()),
+			grpc.WithUnaryInterceptor(otgrpc.OpenTracingClientInterceptor(tracer)),
+			grpc.WithStreamInterceptor(otgrpc.OpenTracingStreamClientInterceptor(tracer)),
 			//grpc.WithDefaultServiceConfig(`{"loadBalancingPolicy": "round_robin"}`),
 		)
 		if err != nil {

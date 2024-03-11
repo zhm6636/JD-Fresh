@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/opentracing/opentracing-go"
 
 	forms "goods_api/verify"
 
@@ -73,6 +74,11 @@ func HandleValidatorError(c *gin.Context, err error) {
 }
 
 func List(ctx *gin.Context) {
+	span, c := opentracing.StartSpanFromContext(ctx.Request.Context(), "API_GoodsList")
+	defer span.Finish()
+
+	// 在 gRPC 请求中传播跟踪信息
+	//ctx := opentracing.ContextWithSpan(, span)
 	//商品的列表 pmin=abc, spring cloud, go-micro
 	request := &proto.GoodsFilterRequest{}
 
@@ -105,7 +111,7 @@ func List(ctx *gin.Context) {
 
 	//context.WithValue(context.Background(), "ginContext", ctx)：这是Go语言中上下文（context）的用法，它用于管理请求的生命周期和跟踪。
 	//context.WithValue方法可以将键值对（"ginContext", ctx）添加到上下文中，并返回带有新的值的上下文。
-	r, err := global.GoodsClient.GoodsList(context.Background(), request)
+	r, err := global.GoodsClient.GoodsList(c, request)
 	if err != nil {
 		zap.S().Errorw("[List] 查询 【商品列表】失败")
 		HandleGrpcErrorToHttp(err, ctx)

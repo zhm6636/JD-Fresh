@@ -6,6 +6,7 @@ import (
 	"fmt"
 
 	"github.com/olivere/elastic/v7"
+	"github.com/opentracing/opentracing-go"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
@@ -15,6 +16,8 @@ import (
 )
 
 func (g GoodsServer) GoodsList(ctx context.Context, req *proto.GoodsFilterRequest) (*proto.GoodsListResponse, error) {
+	span, ctx := opentracing.StartSpanFromContext(ctx, "Goods_Srv_List")
+	defer span.Finish()
 	//关键词搜索、查询新品、查询热门商品、通过价格区间筛选， 通过商品分类筛选
 	goodsListResponse := &proto.GoodsListResponse{}
 
@@ -87,7 +90,7 @@ func (g GoodsServer) GoodsList(ctx context.Context, req *proto.GoodsFilterReques
 		//生成terms查询
 		q = q.Filter(elastic.NewTermsQuery("category_id", categoryIds...))
 	}
-
+	//return nil, status.Errorf(codes.NotFound, "商品分类不存在")
 	//当前页
 	if req.Pages == 0 {
 		req.Pages = 1

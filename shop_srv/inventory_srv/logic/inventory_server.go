@@ -2,11 +2,15 @@ package logic
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 
+	"github.com/apache/rocketmq-client-go/v2/consumer"
+	"github.com/apache/rocketmq-client-go/v2/primitive"
 	"github.com/go-redsync/redsync/v4"
 	"github.com/go-redsync/redsync/v4/redis/goredis/v9"
+	"github.com/opentracing/opentracing-go"
 	"github.com/redis/go-redis/v9"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -40,6 +44,7 @@ func (i InventoryServer) InvDetail(ctx context.Context, info *proto.GoodsInvInfo
 		GoodsId: inventory.Goods,
 		Num:     inventory.Stocks,
 	}, nil
+	//return nil, nil
 }
 
 func (i InventoryServer) Sell(ctx context.Context, info *proto.SellInfo) (*proto.Empty, error) {
@@ -150,6 +155,8 @@ func (i InventoryServer) Sell(ctx context.Context, info *proto.SellInfo) (*proto
 	//}
 	//tx.Commit() // 需要自己手动提交操作
 	//return &proto.Empty{}, nil
+	span, ctx := opentracing.StartSpanFromContext(ctx, "Inventory_Srv_Sell")
+	defer span.Finish()
 
 	client := redis.NewClient(&redis.Options{
 		Addr: "42.192.108.133:6379",
@@ -218,4 +225,42 @@ func (i InventoryServer) Reback(ctx context.Context, info *proto.SellInfo) (*pro
 		global.MysqlConf.DB.Save(&inventory)
 	}
 	return &proto.Empty{}, nil
+}
+
+func ReBackStock(ctx context.Context, msgs ...*primitive.MessageExt) (consumer.ConsumeResult, error) {
+	span, ctx := opentracing.StartSpanFromContext(ctx, "Inventory_Srv_ReBackStock")
+	defer span.Finish()
+	for i := range msgs {
+		//1.根据归还库存的队列取出消息，需要把消息转化为结构体
+		//定义结构体保存订单的信息
+		type Order struct {
+			OrderSn string
+		}
+		order := Order{}
+		json.Unmarshal(msgs[i].Body, &order)
+
+		//2.根据订单号去库存扣减历史表中查询
+		//定义结构体保存订库存扣减历史
+		stockSellDetail := model.StockSellDetail{}
+		tx := global.MysqlConf.DB.Begin()
+		result := tx.Model(&model.StockSellDetail{}).Where(model.StockSellDetail{OrderSn: order.OrderSn}).First(&stockSellDetail)
+
+		if result.RowsAffected == 0 {
+			return consumer.ConsumeRetryLater, nil
+		}
+
+		//3.开启事务去把库存扣减历史表的状态更改为已归还的状态
+		tx.Model(&model.StockSellDetail{}).Where(model.StockSellDetail{OrderSn: order.OrderSn}).Update("status", 2)
+
+		// 4.去库存表把库存加回来
+		for _, detail := range stockSellDetail.Detail {
+			inventory := model.Inventory{}
+			tx.Model(&model.Inventory{}).Where(model.Inventory{Goods: detail.Goods}).First(&inventory)
+			inventory.Stocks += detail.Num
+			tx.Save(&inventory)
+		}
+		tx.Commit()
+		return consumer.ConsumeSuccess, nil
+	}
+	return consumer.ConsumeSuccess, nil
 }

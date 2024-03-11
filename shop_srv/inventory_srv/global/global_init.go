@@ -11,6 +11,9 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/apache/rocketmq-client-go/v2"
+	"github.com/apache/rocketmq-client-go/v2/primitive"
+	"github.com/apache/rocketmq-client-go/v2/producer"
 	"github.com/fsnotify/fsnotify"
 	"github.com/google/uuid"
 	"github.com/hashicorp/consul/api"
@@ -45,6 +48,7 @@ func InitServer() {
 	//InitNaCos()
 	InitMysql()
 	InitRedis()
+	//InitRocketMq()
 	//InitElastic()
 	//InitConsul()
 }
@@ -107,6 +111,7 @@ func InitNaCos() {
 		},
 	})
 
+	zap.S().Info("nacos配置初始化成功", Nacos)
 	if err != nil {
 		zap.S().Panic(err)
 	}
@@ -154,6 +159,23 @@ func InitMysql() {
 
 }
 
+func InitRocketMq() {
+	//把信息追加到延迟队列中
+	//连接rocketmq
+	zap.S().Infof("%v", Nacos)
+
+	RocketMqProducer, _ = rocketmq.NewProducer(
+		producer.WithNsResolver(primitive.NewPassthroughResolver([]string{fmt.Sprintf("%s:%d", Nacos["rocketmq"].(map[string]interface{})["host"].(string), Nacos["rocketmq"].(map[string]interface{})["port"].(int))})),
+		producer.WithRetry(2),
+	)
+	//开始生产
+	err := RocketMqProducer.Start()
+	if err != nil {
+		zap.S().Panic("rocketmq生产者开启失败")
+	}
+
+}
+
 // 初始化redis
 func InitRedis() {
 	RedisConf = &RedisConfig{
@@ -166,6 +188,7 @@ func InitRedis() {
 		Addr: RedisConf.Dsn,
 	})
 	RedisConf.DB = Rdb
+	zap.S().Info("redis初始化成功")
 }
 
 func InitLog() {
@@ -265,12 +288,14 @@ func InitRPCServer(g *grpc.Server) {
 	zap.S().Infof("inventory_srv start success listen on " + port)
 
 	consulClient, id := InitConsul()
+	//开启rocketmq的消费者，去监测归还库存的主题，如果主题有消息，进行调用我们归还库存的方法
 
 	// 等待中断信号，然后注销服务
 	ch := make(chan os.Signal, 1)
 	signal.Notify(ch, syscall.SIGINT, syscall.SIGTERM)
 	<-ch
 	fmt.Println("Shutting down...")
+	//c.Shutdown()
 	err = consulClient.Agent().ServiceDeregister(id)
 	if err != nil {
 		zap.S().Fatal(err)

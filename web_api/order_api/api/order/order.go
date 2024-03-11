@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/opentracing/opentracing-go"
+
 	"order_api/verify"
 
 	"order_api/global"
@@ -89,12 +91,14 @@ func List(ctx *gin.Context) {
 
 // 链路的起点在哪里 http请求
 func New(ctx *gin.Context) {
+	span, c := opentracing.StartSpanFromContext(ctx.Request.Context(), "API_CreateOrder")
+	defer span.Finish()
 	orderForm := verify.CreateOrderForm{}
 	if err := ctx.ShouldBindJSON(&orderForm); err != nil {
 		api.HandleValidatorError(ctx, err)
 	}
 	userId, _ := ctx.Get("userId")
-	rsp, err := global.OrderClient.Create(context.WithValue(context.Background(), "ginContext", ctx), &proto.OrderRequest{
+	rsp, err := global.OrderClient.Create(c, &proto.OrderRequest{
 		UserId:  int32(userId.(uint)),
 		Name:    orderForm.Name,
 		Mobile:  orderForm.Mobile,

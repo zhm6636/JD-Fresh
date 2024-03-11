@@ -1,12 +1,9 @@
 package global
 
 import (
-	"crypto/tls"
-	"crypto/x509"
 	"fmt"
 	"log"
 	"net"
-	"net/http"
 	"os"
 	"os/signal"
 	"path/filepath"
@@ -28,6 +25,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/health"
 	"google.golang.org/grpc/health/grpc_health_v1"
+	"google.golang.org/grpc/reflection"
 	"gopkg.in/yaml.v3"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -258,6 +256,8 @@ func InitRPCServer(g *grpc.Server) {
 
 	// 创建 gRPC 健康检查服务
 	grpc_health_v1.RegisterHealthServer(g, health.NewServer())
+	// 在 gRPC Server 上注册反射服务
+	reflection.Register(g)
 
 	go func() {
 		if err := g.Serve(listen); err != nil {
@@ -365,32 +365,33 @@ func handleConfigChange() {
 
 func InitElastic() {
 	var err error
-	certFile := "./conf/elasticsearch.crt"
-	key := "./conf/elasticsearch.key"
+	//certFile := "./conf/elasticsearch.crt"
+	//key := "./conf/elasticsearch.key"
 
 	// Load certificate
-	cert, err := tls.LoadX509KeyPair(certFile, key)
-	if err != nil {
-		log.Panic(err)
-	}
+	//cert, err := tls.LoadX509KeyPair(certFile, key)
+	//if err != nil {
+	//	log.Panic(err)
+	//}
 
 	// Create a custom TLS configuration
-	tlsConfig := &tls.Config{
-		Certificates:       []tls.Certificate{cert},
-		InsecureSkipVerify: true, // Disable server certificate verification
-		VerifyPeerCertificate: func(rawCerts [][]byte, verifiedChains [][]*x509.Certificate) error {
-			// Implement custom verification logic here
-			return nil
-		},
-	}
+	//tlsConfig := &tls.Config{
+	//	Certificates:       []tls.Certificate{cert},
+	//	InsecureSkipVerify: true, // Disable server certificate verification
+	//	VerifyPeerCertificate: func(rawCerts [][]byte, verifiedChains [][]*x509.Certificate) error {
+	//		// Implement custom verification logic here
+	//		return nil
+	//	},
+	//}
 	addr := Nacos["elasticsearch"].(map[string]interface{})["addr"].(string)
 	port := Nacos["elasticsearch"].(map[string]interface{})["port"].(int)
-	url := fmt.Sprintf("https://%s:%d", addr, port)
-	EsClient, err = elastic.NewClient(elastic.SetURL(url), elastic.SetSniff(false), elastic.SetHealthcheck(true), elastic.SetBasicAuth("elastic", "Zhm5833366.."), elastic.SetHttpClient(&http.Client{
-		Transport: &http.Transport{
-			TLSClientConfig: tlsConfig,
-		},
-	}))
+	url := fmt.Sprintf("http://%s:%d", addr, port)
+	EsClient, err = elastic.NewClient(elastic.SetURL(url), elastic.SetSniff(false))//elastic.SetHealthcheck(true), elastic.SetBasicAuth("elastic", "Zhm5833366.."), elastic.SetHttpClient(&http.Client{
+	//Transport: &http.Transport{
+	//	TLSClientConfig: tlsConfig,
+	//},
+	//},
+
 	if err != nil {
 		panic(err)
 	}

@@ -5,7 +5,6 @@ import (
 
 	"go.uber.org/zap"
 	"gorm.io/gorm"
-	"gorm.io/gorm/schema"
 
 	"inventory_srv/global"
 )
@@ -16,13 +15,13 @@ var db *gorm.DB
 func init() {
 	db = global.MysqlConf.DB
 	// 自动迁移 (这是GORM自动创建表的一种方式--译者注)
-	db.NamingStrategy = schema.NamingStrategy{
-		//TablePrefix:   "t_", // 表前缀
-		SingularTable: true, // 表名单数
-		//NoLowerCase:   true, //跳过蛇形命名
-	}
+	//db.NamingStrategy = schema.NamingStrategy{
+	//	//TablePrefix:   "t_", // 表前缀
+	//	SingularTable: true, // 表名单数
+	//	//NoLowerCase:   true, //跳过蛇形命名
+	//}
 
-	err := db.AutoMigrate(&Inventory{})
+	err := db.AutoMigrate(&Inventory{}, StockSellDetail{})
 	if err != nil {
 		zap.S().Panic(err)
 	}

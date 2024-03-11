@@ -18,6 +18,14 @@ logFilePath: "tmp/logs/log.log"
 cousulAddress: 127.0.0.1
 cousulPort: 8500
 
+rocketmq:
+ host: 42.192.108.133
+ port: 9876
+ timeoutgroup: timeout_group
+ timeouttopic: TIMEOUT_SHOP
+ rebackgroup: reback_group
+ rebacktopic: REBACK_SHOP
+
 Server:
  name: ["goods_srv","inventory_srv"]
 orderServer:

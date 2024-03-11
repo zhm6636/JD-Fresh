@@ -12,7 +12,6 @@ import (
 	"time"
 
 	"github.com/apache/rocketmq-client-go/v2"
-	"github.com/apache/rocketmq-client-go/v2/consumer"
 	"github.com/apache/rocketmq-client-go/v2/primitive"
 	"github.com/apache/rocketmq-client-go/v2/producer"
 	"github.com/fsnotify/fsnotify"
@@ -34,7 +33,6 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 
-	"order_srv/logic"
 	"order_srv/proto/goods_srv"
 	"order_srv/proto/inventory_srv"
 )
@@ -168,7 +166,7 @@ func InitRocketMq() {
 	//连接rocketmq
 
 	RocketMqProducer, _ = rocketmq.NewProducer(
-		producer.WithNsResolver(primitive.NewPassthroughResolver([]string{fmt.Sprintf("%s:%d", Nacos["rockermq"].(map[string]interface{})["host"].(string), Nacos["rockermq"].(map[string]interface{})["port"].(int))})),
+		producer.WithNsResolver(primitive.NewPassthroughResolver([]string{fmt.Sprintf("%s:%d", Nacos["rocketmq"].(map[string]interface{})["host"].(string), Nacos["rocketmq"].(map[string]interface{})["port"].(int))})),
 		producer.WithRetry(2),
 	)
 	//开始生产
@@ -314,7 +312,7 @@ func InitConsul() (*api.Client, string) {
 	return ConsulClient, id
 }
 
-func InitRPCServer(g *grpc.Server) {
+func InitRPCServer(g *grpc.Server, c rocketmq.PushConsumer) {
 	port := strconv.Itoa(Nacos["orderServer"].(map[string]interface{})["port"].(int))
 	listen, err := net.Listen("tcp", ":"+port)
 	if err != nil {
@@ -333,18 +331,6 @@ func InitRPCServer(g *grpc.Server) {
 	zap.S().Infof("order_srv start success listen on " + port)
 
 	consulClient, id := InitConsul()
-
-	//启动监听库存归还的延迟队列
-	c, _ := rocketmq.NewPushConsumer(
-		consumer.WithGroupName("order_timeout_group"),
-		consumer.WithNsResolver(primitive.NewPassthroughResolver([]string{fmt.Sprintf("%s:%d", "127.0.0.1", 9876)})),
-	)
-
-	if err := c.Subscribe("", consumer.MessageSelector{}, logic.OrderTimeOut); err != nil {
-		fmt.Println("读取消息失败")
-	}
-	//rocketmq消费者启动
-	_ = c.Start()
 
 	// 等待中断信号，然后注销服务
 	ch := make(chan os.Signal, 1)
